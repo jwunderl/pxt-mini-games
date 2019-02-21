@@ -4,7 +4,7 @@ namespace runner {
     export function registerMiniGame(
         title: string,
         description: () => void,
-        setup: () => void,
+        setup: (finish: () => void) => void,
         end: (lose: () => void) => number,
     ) {
         gameCollection.push(new MiniGame(description, setup, end));
@@ -15,7 +15,10 @@ namespace runner {
         let accumulatedScore = 0;
         let myLives = 5;
         let gameLost = false;
+        let gameComplete = false;
+
         let lose = () => gameLost = true;
+        let finish = () => gameComplete = true;
 
         // basic game loop
         game.pushScene();
@@ -25,11 +28,18 @@ namespace runner {
         myGame.description();
         controller.pauseUntilAnyButtonIsPressed();
 
-        myGame.setup();
+        control.runInParallel(() => myGame.setup(finish));
+        // finish after countdown
         info.startCountdown(10);
-        info.onCountdownEnd(() => {
-            accumulatedScore += myGame.end(lose);
-        });
+
+        game.onUpdate(function () {
+            if (finish) {
+                // handle finishing early 
+            }
+        })
+
+        // handle finishing at given time
+        info.onCountdownEnd(() => accumulatedScore += myGame.end(lose));
 
         game.popScene();
 
@@ -37,5 +47,6 @@ namespace runner {
             myLives--;
             // lose lives animation
         }
+        // \end basic game loop
     }
 }

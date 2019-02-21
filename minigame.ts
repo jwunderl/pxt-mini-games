@@ -1,6 +1,6 @@
 class MiniGame {
     description: () => void;
-    setup: () => void;
+    setup: (finish: () => void) => void;
     end: (lost: () => void) => number;
 
     /**
@@ -11,7 +11,7 @@ class MiniGame {
      */
     constructor(
         description: () => void,
-        setup: () => void,
+        setup: (finish: () => void) => void,
         end: (lose: () => void) => number
     ) {
         this.description = description;
