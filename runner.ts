@@ -17,8 +17,9 @@ namespace runner {
         let gameLost = false;
         let gameComplete = false;
 
-        let lose = () => gameLost = true;
-        let finish = () => gameComplete = true;
+        const lose = () => gameLost = true;
+        const finish = () => gameComplete = true;
+        const message = "Press any button to Start!";
 
         // basic game loop
         game.pushScene();
@@ -26,24 +27,23 @@ namespace runner {
         gameLost = false;
 
         myGame.description();
-        controller.pauseUntilAnyButtonIsPressed();
-
+        game.splash("Press any button to Start!");
         control.runInParallel(() => myGame.setup(finish));
-        // finish after countdown
-        info.startCountdown(10);
 
+        // handle finishing early 
         game.onUpdate(function () {
             if (finish) {
-                // handle finishing early 
+                info.stopCountdown();
+                accumulatedScore += myGame.end(lose)
             }
         })
 
-        // handle finishing at given time
+        // finish after time limit up
+        info.startCountdown(5);
         info.onCountdownEnd(() => accumulatedScore += myGame.end(lose));
 
-        game.popScene();
-
         if (gameLost) {
+            game.popScene();
             myLives--;
             // lose lives animation
         }
