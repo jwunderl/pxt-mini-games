@@ -25,6 +25,7 @@ namespace runner {
         game.pushScene();
         let myGame = Math.pickRandom(gameCollection);
         gameLost = false;
+        gameComplete = false;
 
         myGame.description();
         game.splash("Press any button to Start!");
@@ -32,7 +33,7 @@ namespace runner {
 
         // handle finishing early 
         game.onUpdate(function () {
-            if (finish) {
+            if (gameComplete) {
                 info.stopCountdown();
                 accumulatedScore += myGame.end(lose)
             }
