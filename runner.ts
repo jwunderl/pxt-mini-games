@@ -29,7 +29,7 @@ namespace runner {
 
         myGame.description();
         game.splash("Press any button to Start!");
-        control.runInParallel(() => myGame.onMiniGameStart(finish));
+        control.runInParallel(() => myGame.onStart(finish));
 
         // handle finishing early 
         game.onUpdate(function () {
@@ -37,17 +37,19 @@ namespace runner {
                 info.stopCountdown();
                 accumulatedScore += myGame.end(lose)
             }
+            if (gameLost || gameComplete) {
+                game.popScene();
+                myLives--;
+                // lose lives animation
+            }
         })
 
         // finish after time limit up
         info.startCountdown(5);
-        info.onCountdownEnd(() => accumulatedScore += myGame.end(lose));
-
-        if (gameLost) {
-            game.popScene();
-            myLives--;
-            // lose lives animation
-        }
+        info.onCountdownEnd(() => {
+            accumulatedScore += myGame.end(lose)
+            info.stopCountdown();
+        });
         // \end basic game loop
     }
 }

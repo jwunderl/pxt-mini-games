@@ -1,6 +1,6 @@
 class MiniGame {
     description: () => void;
-    onMiniGameStart: (finish: () => void) => void;
+    onStart: (finish: () => void) => void;
     end: (lost: () => void) => number;
 
     /**
@@ -11,11 +11,11 @@ class MiniGame {
      */
     constructor(
         description: () => void,
-        onMiniGameStart: (finish: () => void) => void,
+        onStart: (finish: () => void) => void,
         end: (lose: () => void) => number
     ) {
         this.description = description;
-        this.onMiniGameStart = onMiniGameStart;
+        this.onStart = onStart;
         this.end = end;
     }
 }
