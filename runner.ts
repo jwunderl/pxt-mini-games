@@ -4,10 +4,10 @@ namespace runner {
     export function registerMiniGame(
         title: string,
         description: () => void,
-        setup: (finish: () => void) => void,
+        onMiniGameStart: (finish: () => void) => void,
         end: (lose: () => void) => number,
     ) {
-        gameCollection.push(new MiniGame(description, setup, end));
+        gameCollection.push(new MiniGame(description, onMiniGameStart, end));
     }
 
     export function start() {
@@ -29,7 +29,7 @@ namespace runner {
 
         myGame.description();
         game.splash("Press any button to Start!");
-        control.runInParallel(() => myGame.setup(finish));
+        control.runInParallel(() => myGame.onMiniGameStart(finish));
 
         // handle finishing early 
         game.onUpdate(function () {
