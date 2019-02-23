@@ -1,12 +1,12 @@
 // example usage: 
-runner.registerMiniGame(
-    "My Fantastic Mini Game",
-    function description() {
+runner.registerMiniGame({
+    title: "My Fantastic Mini Game",
+    tutorial: function tutorial() {
         // displays the intro to the game (a splash screen / controls / tutorial)
         console.log("description called")
         game.splash("Hi!")
     },
-    function onMiniGameStart(finish: () => void) {
+    onMiniGameStart: function onMiniGameStart(finish: () => void) {
         // sets up and starts the mini game
         // if the game is finished before end is invoked,
         // can call `finish();` to report to the runner that
@@ -15,12 +15,12 @@ runner.registerMiniGame(
         sprites.createProjectile(sprites.castle.heroFrontAttack1, 50, 0);
         controller.anyButton.onEvent(ControllerButtonEvent.Pressed, finish);
     },
-    function end(lose: () => void) {
+    end: function end(lose: () => void) {
         // ends the mini game, returning the score the player has accumulated
         // can call `lose();` to report that the player lost the game
         console.log("end called");
         return 0;
     }
-);
+});
 
 runner.start()

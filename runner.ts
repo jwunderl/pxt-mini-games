@@ -1,13 +1,8 @@
 namespace runner {
     let gameCollection: MiniGame[] = [];
 
-    export function registerMiniGame(
-        title: string,
-        description: () => void,
-        onMiniGameStart: (finish: () => void) => void,
-        end: (lose: () => void) => number,
-    ) {
-        gameCollection.push(new MiniGame(description, onMiniGameStart, end));
+    export function registerMiniGame(options: MiniGameOptions) {
+        gameCollection.push(new MiniGame(options));
     }
 
     export function start() {
@@ -27,7 +22,7 @@ namespace runner {
         gameLost = false;
         gameComplete = false;
 
-        myGame.description();
+        myGame.tutorial();
         game.splash("Press any button to Start!");
         control.runInParallel(() => myGame.onStart(finish));
 
