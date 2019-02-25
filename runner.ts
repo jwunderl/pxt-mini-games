@@ -13,48 +13,39 @@ class GameRunner {
         this.gameCollection.push(new MiniGame(options));
     }
 
-    public start() {
-        // Two options: mini game mode
-        let gameLost = false;
-        let gameComplete = false;
-
-        const lose = () => gameLost = true;
-        const finish = () => gameComplete = true;
+    public startRandomGame() {
         const message = "Press any button to Start!";
+        const selectedGame = Math.pickRandom(this.gameCollection);
 
-        // basic game loop
-        game.pushScene();
-        let myGame = Math.pickRandom(this.gameCollection);
-        gameLost = false;
-        gameComplete = false;
-
-        myGame.tutorial();
+        selectedGame.tutorial();
         game.splash("Press any button to Start!");
-        control.runInParallel(() => myGame.onMiniGameStart(finish));
 
-        // handle finishing early 
-        game.onUpdate(() => {
-            if (gameComplete) {
-                info.stopCountdown();
-                this.score += myGame.end(lose)
-            }
-            if (gameLost || gameComplete) {
-                game.popScene();
-                this.lives--;
-                // todo: lose lives animation
-            }
-        })
-
-        // finish after time limit up
-        info.startCountdown(5);
-        info.onCountdownEnd(() => {
-            this.score += myGame.end(lose)
-            info.stopCountdown();
-        });
-        // \end basic game loop
+        game.pushScene();
+        this.startSingleMiniGame(selectedGame);
+        game.popScene();
     }
 
-    private startSingleMiniGame(game: MiniGame) {
+    private startSingleMiniGame(selectedGame: MiniGame, timeout: number = 10) {
+        let gameComplete = false;
+        const finish = () => gameComplete = true;
 
+        control.runInParallel(() => selectedGame.onMiniGameStart(finish));
+
+        if (timeout > 0) {
+            info.startCountdown(timeout);
+            info.onCountdownEnd(finish);
+        }
+
+        pauseUntil(() => gameComplete);
+        info.stopCountdown();
+
+        let gameLost = false;
+        const lose = () => gameLost = true;
+        this.score += selectedGame.end(lose);
+
+        if (gameLost) {
+            this.lives--;
+            // todo: lose lives animation?
+        }
     }
 }

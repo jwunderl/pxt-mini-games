@@ -25,4 +25,4 @@ runner.registerMiniGame({
     }
 });
 
-runner.start()
+runner.startRandomGame()
