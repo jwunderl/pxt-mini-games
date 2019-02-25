@@ -28,8 +28,12 @@ class GameRunner {
     private startSingleMiniGame(selectedGame: MiniGame, timeout: number = 10) {
         let gameComplete = false;
         const finish = () => gameComplete = true;
+        let gameLost = false;
+        const lose = () => gameLost = true;
+        const state: any = {};
 
-        control.runInParallel(() => selectedGame.onMiniGameStart(finish));
+
+        control.runInParallel(() => selectedGame.onMiniGameStart(finish, lose, state));
 
         if (timeout > 0) {
             info.startCountdown(timeout);
@@ -39,9 +43,7 @@ class GameRunner {
         pauseUntil(() => gameComplete);
         info.stopCountdown();
 
-        let gameLost = false;
-        const lose = () => gameLost = true;
-        this.score += selectedGame.end(lose);
+        this.score += selectedGame.end(lose, state);
 
         if (gameLost) {
             this.lives--;
