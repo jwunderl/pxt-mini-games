@@ -12,7 +12,7 @@ interface MiniGameOptions {
 class MiniGame {
     title: string;
     tutorial: () => void;
-    onStart: (finish: () => void) => void;
+    onMiniGameStart: (finish: () => void) => void;
     end: (lost: () => void) => number;
 
     font: image.Font;
@@ -29,7 +29,7 @@ class MiniGame {
         // required
         this.title = options.title;
         this.tutorial = options.tutorial;
-        this.onStart = options.onMiniGameStart;
+        this.onMiniGameStart = options.onMiniGameStart;
         this.end = options.end;
 
         // optional

@@ -1,4 +1,6 @@
-// example usage: 
+// example usage:
+const runner = new GameRunner();
+
 runner.registerMiniGame({
     title: "My Fantastic Mini Game",
     tutorial: function tutorial() {
