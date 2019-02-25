@@ -58,13 +58,13 @@ class GameRunner {
         while (true) {
             const selectedGameIndex = Math.floor(count / screen.height) % this.gameCollection.length;
             const nextGameIndex = (selectedGameIndex + 1) % this.gameCollection.length;
-            const offset = -(count % screen.height)
+            const offset = count % screen.height;
 
             this.gameCollection[selectedGameIndex].renderIcon(offset);
-            this.gameCollection[nextGameIndex].renderIcon(offset + screen.height);
+            this.gameCollection[nextGameIndex].renderIcon(offset - screen.height);
 
             pause(20);
-            count++;
+            count += 10;
         }
     }
 
