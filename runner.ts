@@ -16,6 +16,9 @@ class GameRunner {
     public startRandomGame() {
         const message = "Press any button to Start!";
         const selectedGame = Math.pickRandom(this.gameCollection);
+        // selectedGame.renderIcon();
+        this.scrollGameIcons();
+        pause(10000)
 
         selectedGame.tutorial();
         game.splash("Press any button to Start!");
@@ -31,7 +34,6 @@ class GameRunner {
         let gameLost = false;
         const lose = () => gameLost = true;
         const state: any = {};
-
 
         control.runInParallel(() => selectedGame.onMiniGameStart(finish, lose, state));
 
@@ -50,4 +52,20 @@ class GameRunner {
             // todo: lose lives animation?
         }
     }
+
+    private scrollGameIcons() {
+        let count = 0;
+        while (true) {
+            const selectedGameIndex = Math.floor(count / screen.height) % this.gameCollection.length;
+            const nextGameIndex = (selectedGameIndex + 1) % this.gameCollection.length;
+            const offset = -(count % screen.height)
+
+            this.gameCollection[selectedGameIndex].renderIcon(offset);
+            this.gameCollection[nextGameIndex].renderIcon(offset + screen.height);
+
+            pause(20);
+            count++;
+        }
+    }
+
 }
