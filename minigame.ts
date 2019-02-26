@@ -1,8 +1,17 @@
 interface MiniGameOptions {
     title: string;
     tutorial: () => void;
-    onMiniGameStart: (finish: () => void, lose: () => void, state: any) => void;
-    end: (lost: () => void, state: any) => number;
+
+    onMiniGameStart: (
+        finish: () => void,
+        lose: () => void,
+        state: any
+    ) => void;
+
+    onMiniGameEnd: (
+        lost: () => void,
+        state: any
+    ) => number;
 
     font?: image.Font;
     titleFont?: image.Font;
@@ -14,8 +23,17 @@ interface MiniGameOptions {
 class MiniGame {
     title: string;
     tutorial: () => void;
-    onMiniGameStart: (finish: () => void, lose: () => void, state: any) => void;
-    end: (lost: () => void, state: any) => number;
+
+    onMiniGameStart: (
+        finish: () => void,
+        lose: () => void,
+        state: any
+    ) => void;
+
+    onMiniGameEnd: (
+        lost: () => void,
+        state: any
+    ) => number;
 
     font: image.Font;
     titleFont: image.Font;
@@ -34,7 +52,7 @@ class MiniGame {
         this.title = options.title;
         this.tutorial = options.tutorial;
         this.onMiniGameStart = options.onMiniGameStart;
-        this.end = options.end;
+        this.onMiniGameEnd = options.onMiniGameEnd;
 
         // optional
         this.font = options.font ? options.font : image.font8;

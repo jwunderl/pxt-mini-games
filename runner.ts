@@ -14,11 +14,8 @@ class GameRunner {
     }
 
     public startRandomGame() {
-        const message = "Press any button to Start!";
-        const selectedGame = Math.pickRandom(this.gameCollection);
-        // selectedGame.renderIcon();
-        this.scrollGameIcons();
-        pause(10000)
+        const selectedGame = this.selectRandomWithScroll();
+        pause(2000);
 
         selectedGame.tutorial();
         game.splash("Press any button to Start!");
@@ -35,7 +32,13 @@ class GameRunner {
         const lose = () => gameLost = true;
         const state: any = {};
 
-        control.runInParallel(() => selectedGame.onMiniGameStart(finish, lose, state));
+        control.runInParallel(
+            () => selectedGame.onMiniGameStart(
+                finish,
+                lose,
+                state
+            )
+        );
 
         if (timeout > 0) {
             info.startCountdown(timeout);
@@ -45,7 +48,7 @@ class GameRunner {
         pauseUntil(() => gameComplete);
         info.stopCountdown();
 
-        this.score += selectedGame.end(lose, state);
+        this.score += selectedGame.onMiniGameEnd(lose, state);
 
         if (gameLost) {
             this.lives--;
@@ -53,19 +56,36 @@ class GameRunner {
         }
     }
 
-    private scrollGameIcons() {
+    private selectRandomWithScroll(
+        speed: number = 20,
+        iterations: number = 10,
+        speedDownChance: number = 5
+    ): MiniGame {
         let count = 0;
-        while (true) {
-            const selectedGameIndex = Math.floor(count / screen.height) % this.gameCollection.length;
-            const nextGameIndex = (selectedGameIndex + 1) % this.gameCollection.length;
+        let previousGameIndex: number;
+        let selectedGameIndex: number;
+
+        // scroll till out of iterations and icon nearly centered on screen
+        while (iterations > 0 || (count % screen.height > speed << 1)) {
+            previousGameIndex = Math.floor(count / screen.height) % this.gameCollection.length;
+            selectedGameIndex = (previousGameIndex + 1) % this.gameCollection.length;
             const offset = count % screen.height;
 
-            this.gameCollection[selectedGameIndex].renderIcon(offset);
-            this.gameCollection[nextGameIndex].renderIcon(offset - screen.height);
+            this.gameCollection[previousGameIndex].renderIcon(offset);
+            this.gameCollection[selectedGameIndex].renderIcon(offset - screen.height);
 
             pause(20);
-            count += 10;
-        }
-    }
+            count += speed;
 
+            if (Math.percentChance(speedDownChance)) {
+                iterations--;
+                speed = Math.max(1, Math.ceil(speed * .75));
+            }
+        }
+
+        const selectedGame = this.gameCollection[selectedGameIndex];
+        selectedGame.renderIcon();
+        pause(1000);
+        return selectedGame;
+    }
 }
