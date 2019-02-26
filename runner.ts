@@ -62,12 +62,11 @@ class GameRunner {
         speedDownChance: number = 5
     ): MiniGame {
         let count = 0;
-        let previousGameIndex: number;
         let selectedGameIndex: number;
 
         // scroll till out of iterations and icon nearly centered on screen
         while (iterations > 0 || (count % screen.height > speed << 1)) {
-            previousGameIndex = Math.floor(count / screen.height) % this.gameCollection.length;
+            const previousGameIndex = Math.floor(count / screen.height) % this.gameCollection.length;
             selectedGameIndex = (previousGameIndex + 1) % this.gameCollection.length;
             const offset = count % screen.height;
 
