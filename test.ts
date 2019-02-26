@@ -1,6 +1,3 @@
-// example usage:
-const runner = new GameRunner();
-
 // game 1
 runner.registerMiniGame({
     title: "My Fantastic Mini Game",

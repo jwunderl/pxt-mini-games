@@ -88,3 +88,6 @@ class GameRunner {
         return selectedGame;
     }
 }
+
+// default mini game runner
+const runner = new GameRunner();
